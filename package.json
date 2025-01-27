@@ -21,7 +21,8 @@
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
     "db:migrate": "drizzle-kit migrate",
-    "db:seed": "tsx src/db/seed.ts"
+    "db:seed": "tsx src/db/seed.ts",
+    "deploy": "vercel --prod"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
