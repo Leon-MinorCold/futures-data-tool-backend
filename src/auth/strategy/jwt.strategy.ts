@@ -1,10 +1,10 @@
-import { Config } from '@/config/schema';
-import { UsersService } from '@/users/users.service';
+import { Config } from '../../config/schema';
+import { UsersService } from '../../users/users.service';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { JwtPayload } from '@/types/auth';
+import { JwtPayload } from '../../types/auth';
 import { Request } from 'express';
 
 @Injectable()

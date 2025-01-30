@@ -16,8 +16,8 @@ import {
   UpdateUserDto,
   updateUserSchema,
 } from '../types/user';
-import { JwtGuard } from '@/auth/guards/jwt.guard';
-import { ApiResponse } from '@/lib/response';
+import { JwtGuard } from '../auth/guards/jwt.guard';
+import { ApiResponse } from '../lib/response';
 
 @Controller('users')
 export class UsersController {

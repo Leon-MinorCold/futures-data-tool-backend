@@ -6,7 +6,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { ApiResponse, ResponseCode } from '@/lib/response';
+import { ApiResponse, ResponseCode } from '../lib/response';
 import { ZodValidationException } from 'nestjs-zod';
 import { PostgresError } from 'postgres';
 

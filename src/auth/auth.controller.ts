@@ -13,7 +13,7 @@ import { jwtPayloadSchema, RegisterDto } from '../types/auth';
 import { safeUserSchema, User } from '../types/user';
 import { getCookieOptions } from './utils/cookie';
 import { LocalGuard } from './guards/local.guard';
-import { UseUser } from '@/users/decorators/user.decorator';
+import { UseUser } from '../users/decorators/user.decorator';
 import { JwtGuard } from './guards/jwt.guard';
 import { RefreshGuard } from './guards/refresh.guard';
 
