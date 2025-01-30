@@ -44,6 +44,9 @@ $ pnpm run db:generate
 # push the migrations to the database
 $ pnpm run db:push
 
+## generate sample data in database
+$ pnpm run db:seed
+
 # deploy the app on vercel
 $ vercel --prod
 ```
