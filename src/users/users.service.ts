@@ -1,14 +1,23 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
 import { users } from '../database/schema';
 import { eq } from 'drizzle-orm';
-import { CreateUserDto, UpdateUserDto, User } from '../types/user';
+import { CreateUserDto, UpdateUserDto, User, uuidSchema } from '../types/user';
 
 @Injectable()
 export class UsersService {
   constructor(private readonly database: DatabaseService) {}
 
   async findOneById(id: string): Promise<User> {
+    const isValidUUID = uuidSchema.safeParse(id).success;
+    if (!isValidUUID) {
+      throw new BadRequestException('Invalid UUID format');
+    }
+
     const [user] = await this.database.db
       .select()
       .from(users)
@@ -60,7 +69,10 @@ export class UsersService {
   }
 
   // find user by email or username
-  async findOneByIdentifier(identifier: string): Promise<User> {
+  async findOneByIdentifier(
+    identifier: string,
+    error: boolean = true,
+  ): Promise<User> {
     let user = await this.database.db
       .select()
       .from(users)
@@ -75,7 +87,8 @@ export class UsersService {
       .where(eq(users.username, identifier))
       .limit(1); // Limit to one result
 
-    if (user.length === 0) throw new NotFoundException('User not found');
+    if (user.length === 0 && error)
+      throw new NotFoundException('User not found');
 
     return user[0]; // Return the first user found
   }

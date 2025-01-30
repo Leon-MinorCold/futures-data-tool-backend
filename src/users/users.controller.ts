@@ -17,6 +17,7 @@ import {
   updateUserSchema,
 } from '../types/user';
 import { JwtGuard } from '@/auth/guards/jwt.guard';
+import { ApiResponse } from '@/lib/response';
 
 @Controller('users')
 export class UsersController {
@@ -61,6 +62,9 @@ export class UsersController {
     if (!deletedUser) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
-    return { message: 'User deleted successfully', user: deletedUser };
+    return ApiResponse.success(
+      safeUserSchema.parse(deletedUser),
+      'User deleted successfully',
+    );
   }
 }

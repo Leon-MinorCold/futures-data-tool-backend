@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   ForbiddenException,
   Injectable,
   InternalServerErrorException,
@@ -73,6 +74,15 @@ export class AuthService {
   async register({ username, password, email }: RegisterDto) {
     const salt = await this.generateSalt();
     try {
+      const existingUser = await this.usersService.findOneByIdentifier(
+        email,
+        false,
+      );
+
+      if (existingUser) {
+        throw new ConflictException('Email already exists');
+      }
+
       const hashedPassword = await this.hash(password, salt);
       const user = await this.usersService.create({
         username,
@@ -85,7 +95,7 @@ export class AuthService {
       return user;
     } catch (error) {
       Logger.error(error);
-      throw new InternalServerErrorException();
+      throw new ConflictException(error.message || 'Register failed');
     }
   }
 

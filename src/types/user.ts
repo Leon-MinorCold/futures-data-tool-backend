@@ -1,8 +1,16 @@
 import { z } from 'zod';
+// Supabase UUID 格式的正则表达式
+const uuidRegex =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+// 创建自定义的 UUID schema
+export const uuidSchema = z.string().regex(uuidRegex, {
+  message: 'Invalid UUID format',
+});
 
 // 基础用户 Schema (来自数据库表)
 export const userSchema = z.object({
-  id: z.string().uuid(),
+  id: uuidSchema,
   email: z.string().email('Invalid email format'),
   username: z.string().min(2, 'Username must be at least 2 characters'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
