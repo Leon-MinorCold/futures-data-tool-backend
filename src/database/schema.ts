@@ -19,6 +19,8 @@ export const users = pgTable('users', {
   role: userRoleEnum('role').default('user').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  lastSignedIn: timestamp('last_signed_in'),
+  refreshToken: text('refresh_token'),
 });
 
 // 为 TypeScript 创建类型
