@@ -15,10 +15,12 @@ async function bootstrap() {
       process.env.NODE_ENV === 'development'
         ? ['debug', 'error', 'warn']
         : ['error', 'warn', 'log'],
-    cors: true,
   });
 
   const configService = app.get(ConfigService<Config>);
+
+  // CORS
+  app.enableCors({ credentials: true, origin: true });
 
   const globalApiPrefix = 'api';
   app.setGlobalPrefix(globalApiPrefix);
