@@ -11,13 +11,15 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import {
-  safeUserSchema,
+  SafeUser,
   CreateUserDto,
   UpdateUserDto,
   updateUserSchema,
+  safeUserSchema,
 } from '../types/user';
 import { JwtGuard } from '../auth/guards/jwt.guard';
 import { ApiResponse } from '../lib/response';
+import { UseUser } from './decorators/user.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -29,6 +31,12 @@ export class UsersController {
     return (await this.usersService.findAll()).map((item) =>
       safeUserSchema.parse(item),
     );
+  }
+
+  @Get('me')
+  @UseGuards(JwtGuard)
+  getMe(@UseUser() user: SafeUser) {
+    return user;
   }
 
   @Get(':id')
