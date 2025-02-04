@@ -17,7 +17,9 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
       max: 1, // 连接池最大连接数
     });
 
-    this.db = drizzle(this.client);
+    this.db = drizzle(this.client, {
+      casing: 'snake_case',
+    });
 
     this.supabase = createClient(
       this.configService.get('NEST_PUBLIC_SUPABASE_URL'),

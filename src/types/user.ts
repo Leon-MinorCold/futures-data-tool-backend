@@ -18,8 +18,8 @@ export const userSchema = z.object({
   role: z.enum(['admin', 'user']),
   createdAt: z.date(),
   updatedAt: z.date(),
-  refreshToken: z.string(),
-  lastSignedIn: z.date(),
+  refresh_token: z.string(),
+  last_signed_in: z.date(),
 });
 
 // 创建用户请求的验证 Schema
@@ -38,8 +38,8 @@ export const updateUserSchema = userSchema.partial();
 export const safeUserSchema = userSchema.omit({
   password: true,
   salt: true,
-  refreshToken: true,
-  lastSignedIn: true,
+  refresh_token: true,
+  last_signed_in: true,
 });
 
 export type CreateUserDto = z.infer<typeof createUserSchema>;

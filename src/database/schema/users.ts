@@ -6,6 +6,7 @@ import {
   varchar,
   timestamp,
 } from 'drizzle-orm/pg-core';
+import { timestampsColumns } from '../utils/columns-helper';
 
 // 创建角色枚举
 export const userRoleEnum = pgEnum('user_role', ['admin', 'user']);
@@ -17,12 +18,7 @@ export const users = pgTable('users', {
   salt: text('salt').notNull(),
   password: text('password').notNull(),
   role: userRoleEnum('role').default('user').notNull(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
-  lastSignedIn: timestamp('last_signed_in'),
-  refreshToken: text('refresh_token'),
+  last_signed_in: timestamp('last_signed_in'),
+  refresh_token: text('refresh_token'),
+  ...timestampsColumns,
 });
-
-// 为 TypeScript 创建类型
-export type User = typeof users.$inferSelect;
-export type NewUser = typeof users.$inferInsert;

@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
-import { users } from '../database/schema';
+import { users } from '../database/schema/users';
 import { eq } from 'drizzle-orm';
 import { CreateUserDto, UpdateUserDto, User, uuidSchema } from '../types/user';
 

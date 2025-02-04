@@ -11,6 +11,8 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 // 用于 drizzle 的 postgres 客户端
 export const queryClient = postgres(databaseUrl);
-export const db = drizzle(queryClient);
+export const db = drizzle(queryClient, {
+  casing: 'snake_case',
+});
 
 export { supabase };
