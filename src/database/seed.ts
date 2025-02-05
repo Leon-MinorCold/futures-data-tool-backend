@@ -30,13 +30,14 @@ async function insertUsers() {
 async function insertFutures() {
   await db.insert(futures).values([
     {
-      contract_code: 'FG',
-      contract_name: '玻璃',
-      min_price_tick: '1',
-      tick_value: '20',
-      trading_fee: '6',
+      contractCode: 'FG',
+      contractName: '玻璃',
+      minPriceTick: 1,
+      tickValue: 20,
+      tradingFee: 6,
       exchange: '上海交易所',
-      contract_unit: '20',
+      contractUnitValue: 20,
+      contractUnitType: '吨/手',
     },
   ]);
 }

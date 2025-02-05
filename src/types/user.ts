@@ -1,3 +1,4 @@
+import { dateSchema } from './common';
 import { z } from 'zod';
 // Supabase UUID 格式的正则表达式
 const uuidRegex =
@@ -9,18 +10,18 @@ export const uuidSchema = z.string().regex(uuidRegex, {
 });
 
 // 基础用户 Schema (来自数据库表)
-export const userSchema = z.object({
-  id: uuidSchema,
-  email: z.string().email('Invalid email format'),
-  username: z.string().min(2, 'Username must be at least 2 characters'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
-  salt: z.string(),
-  role: z.enum(['admin', 'user']),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-  refresh_token: z.string(),
-  last_signed_in: z.date(),
-});
+export const userSchema = z
+  .object({
+    id: uuidSchema,
+    email: z.string().email('Invalid email format'),
+    username: z.string().min(2, 'Username must be at least 2 characters'),
+    password: z.string().min(6, 'Password must be at least 6 characters'),
+    salt: z.string(),
+    role: z.enum(['admin', 'user']),
+    refreshToken: z.string(),
+    lastSignedIn: z.date(),
+  })
+  .merge(dateSchema);
 
 // 创建用户请求的验证 Schema
 export const createUserSchema = userSchema.pick({
@@ -38,8 +39,8 @@ export const updateUserSchema = userSchema.partial();
 export const safeUserSchema = userSchema.omit({
   password: true,
   salt: true,
-  refresh_token: true,
-  last_signed_in: true,
+  refreshToken: true,
+  lastSignedIn: true,
 });
 
 export type CreateUserDto = z.infer<typeof createUserSchema>;

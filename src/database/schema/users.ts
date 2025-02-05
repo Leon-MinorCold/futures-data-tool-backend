@@ -18,7 +18,7 @@ export const users = pgTable('users', {
   salt: text('salt').notNull(),
   password: text('password').notNull(),
   role: userRoleEnum('role').default('user').notNull(),
-  last_signed_in: timestamp('last_signed_in'),
-  refresh_token: text('refresh_token'),
+  lastSignedIn: timestamp('last_signed_in'),
+  refreshToken: text('refresh_token'),
   ...timestampsColumns,
 });

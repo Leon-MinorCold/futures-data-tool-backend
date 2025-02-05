@@ -1,5 +1,4 @@
 import { createZodDto } from 'nestjs-zod/dto';
-// Zod 验证 schema
 import { z } from 'zod';
 
 export const futuresSchema = z.object({
@@ -19,7 +18,8 @@ export const futuresSchema = z.object({
     .string()
     .min(1, '交易所不能为空')
     .max(50, '交易所名称不能超过50个字符'),
-  contractUnit: z.number().positive('合约单位必须大于0'),
+  contractUnitValue: z.number().positive('合约单位值必须大于0'),
+  contractUnitType: z.string().min(1, '合约单位不能为空'),
 });
 
 export const createFuturesSchema = futuresSchema.pick({
@@ -29,10 +29,12 @@ export const createFuturesSchema = futuresSchema.pick({
   tickValue: true,
   tradingFee: true,
   exchange: true,
-  contractUnit: true,
+  contractUnitValue: true,
+  contractUnitType: true,
 });
 
 export const updateFuturesSchema = futuresSchema.partial();
 
+export class Futures extends createZodDto(futuresSchema) {}
 export class CreateFuturesDto extends createZodDto(createFuturesSchema) {}
 export class UpdateFuturesDto extends createZodDto(updateFuturesSchema) {}
