@@ -38,7 +38,3 @@ export const futures = pgTable('futures', {
   contractUnitType: varchar('contract_unit_type', { length: 10 }).notNull(), // 例如 "吨/手"
   ...timestampsColumns,
 });
-
-// TypeScript 类型
-export type Future = typeof futures.$inferSelect;
-export type NewFuture = typeof futures.$inferInsert;

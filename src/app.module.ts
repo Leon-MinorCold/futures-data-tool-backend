@@ -10,6 +10,7 @@ import { TransformInterceptor } from './interceptors/transform.interceptor';
 import { AllExceptionsFilter } from './filters/http-exception.filter';
 import { AuthModule } from './auth/auth.module';
 import { LoggerInterceptor } from './interceptors/logger.interceptor';
+import { FuturesModule } from './futures/futures.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { LoggerInterceptor } from './interceptors/logger.interceptor';
     // features
     UsersModule,
     AuthModule,
+    FuturesModule,
   ],
   controllers: [AppController],
   providers: [

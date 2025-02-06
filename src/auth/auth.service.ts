@@ -117,14 +117,14 @@ export class AuthService {
 
   async updateRefreshToken(email: string, token: string | null) {
     return this.usersService.updateByEmail(email, {
-      refresh_token: token,
-      last_signed_in: token ? new Date() : undefined,
+      refreshToken: token,
+      lastSignedIn: token ? new Date() : undefined,
     });
   }
 
   async validateRefreshToken(payload: JwtPayload, token: string) {
     const user = await this.usersService.findOneById(payload.id);
-    const userToken = user.refresh_token;
+    const userToken = user.refreshToken;
 
     if (!userToken || userToken !== token) {
       throw new ForbiddenException('Invalid RefreshToken');
