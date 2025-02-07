@@ -3,6 +3,7 @@ import { db, queryClient } from './config';
 import crypto from 'crypto';
 import { users } from './schema/users';
 import { futures } from './schema/futures';
+import { futuresTradeHistory } from './schema/futures-trade-history';
 
 // 辅助函数：生成盐值和密码哈希
 function generatePassword(plainPassword: string) {

@@ -3,7 +3,7 @@ import { DatabaseService } from '../database/database.service'; // 假设你有�
 import { eq } from 'drizzle-orm';
 
 @Injectable()
-export class BaseService<T> {
+export class BaseService<T, UpdateDto = Partial<T>> {
   protected readonly database: DatabaseService;
 
   constructor(
@@ -32,10 +32,7 @@ export class BaseService<T> {
     return (await this.database.db.select().from(this.table)) as T[];
   }
 
-  // Tip: 没有create的原因是在create之前需要根据每个表不同的情况进行一次查询（后期不否认会改成复用）
-  // async create() {}
-
-  async update(id: string, data: Partial<T>): Promise<T> {
+  async update(id: string, data: UpdateDto): Promise<T> {
     await this.findOneById(id);
     const [updatedEntity] = await this.database.db
       .update(this.table)
