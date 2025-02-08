@@ -20,7 +20,7 @@ export const futures = pgTable('futures', {
   tickValue: numericCasted('tick_value', { precision: 10, scale: 4 }).notNull(),
 
   // 交易手续费 ex: 玻璃 76元
-  tradingFee: numericCasted('trading_fee', {
+  tradeFee: numericCasted('trade_fee', {
     precision: 10,
     scale: 4,
   }).notNull(),
