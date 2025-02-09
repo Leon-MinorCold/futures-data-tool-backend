@@ -35,7 +35,7 @@ async function insertFutures() {
       contractName: '玻璃',
       minPriceTick: 1,
       tickValue: 20,
-      tradingFee: 6,
+      tradeFee: 6,
       exchange: '上海交易所',
       contractUnitValue: 20,
       contractUnitType: '吨/手',
