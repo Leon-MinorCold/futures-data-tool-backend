@@ -3,6 +3,7 @@ import { BaseController } from '../common/base.controller';
 import { CreateFuturesDto, Futures, UpdateFuturesDto } from '../types/futures';
 import { FuturesService } from '../futures/futures.service';
 import { JwtGuard } from '../auth/guards/jwt.guard';
+import { PaginatedResponse } from '../types/common';
 
 @Controller('futures')
 export class FuturesController extends BaseController<
@@ -17,10 +18,21 @@ export class FuturesController extends BaseController<
   @UseGuards(JwtGuard)
   async all(
     @Query() query: { page?: string; pageSize?: string },
-  ): Promise<Futures[]> {
+  ): Promise<PaginatedResponse<Futures>> {
     const page = query.page ? +query.page : 1;
     const pageSize = query.pageSize ? +query.pageSize : 10;
-    return this.futuresService.findAll({ page, pageSize });
+    const [list, total] = await Promise.all([
+      this.futuresService.findAll(page, pageSize),
+      this.futuresService.getTotalCount(),
+    ]);
+    return {
+      list,
+      pagination: {
+        page,
+        pageSize,
+        total,
+      },
+    };
   }
 
   @Post()

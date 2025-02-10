@@ -6,7 +6,7 @@ import {
 import { DatabaseService } from '../database/database.service';
 import { CreateFuturesDto, Futures } from '../types/futures';
 import { futures } from 'src/database/schema/futures';
-import { eq } from 'drizzle-orm';
+import { eq, count } from 'drizzle-orm';
 import { BaseService } from '../common/base.service';
 
 @Injectable()
@@ -15,13 +15,20 @@ export class FuturesService extends BaseService<Futures> {
     super(database, futures, 'Futures');
   }
 
-  async findAll({ page = 1, pageSize = 10 }): Promise<Futures[]> {
+  async findAll(page = 1, pageSize = 10): Promise<Futures[]> {
     const offset = (page - 1) * pageSize;
-    return await this.database.db
+    return this.database.db
       .select()
       .from(futures)
       .limit(pageSize)
       .offset(offset);
+  }
+
+  async getTotalCount(): Promise<number> {
+    const result = await this.database.db
+      .select({ count: count() })
+      .from(futures);
+    return Number(result[0]?.count || 0);
   }
 
   async findOneById(id: string): Promise<Futures> {

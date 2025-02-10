@@ -9,3 +9,12 @@ export const paginationSchema = z.object({
   page: z.number().positive().default(1),
   pageSize: z.number().positive().default(10),
 });
+
+export interface PaginatedResponse<T> {
+  list: T[];
+  pagination: {
+    page: number;
+    pageSize: number;
+    total: number;
+  };
+}
