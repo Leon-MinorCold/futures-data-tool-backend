@@ -22,7 +22,7 @@ export class FuturesController extends BaseController<
     const page = query.page ? +query.page : 1;
     const pageSize = query.pageSize ? +query.pageSize : 10;
     const [list, total] = await Promise.all([
-      this.futuresService.findAll(page, pageSize),
+      this.futuresService.findAll({ page, pageSize }),
       this.futuresService.getTotalCount(),
     ]);
     return {

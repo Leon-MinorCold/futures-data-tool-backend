@@ -36,5 +36,7 @@ export const futures = pgTable('futures', {
 
   // 合约单位 ex：玻璃- 吨/手
   contractUnitType: varchar('contract_unit_type', { length: 10 }).notNull(), // 例如 "吨/手"
+
+  // 创建和更新时间
   ...timestampsColumns,
 });

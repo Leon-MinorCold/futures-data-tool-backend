@@ -1,8 +1,25 @@
 import { z } from 'zod';
 
 export const dateSchema = z.object({
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  createdAt: z
+    .number({
+      invalid_type_error: '创建时间必须是数字时间戳',
+      required_error: '缺少创建时间',
+    })
+    .int()
+    .positive()
+    .describe('创建时间戳')
+    .refine((v) => v < Date.now() + 1000, '时间戳不能超过当前时间1秒')
+    .optional(),
+  updatedAt: z
+    .number({
+      invalid_type_error: '更新时间必须是数字时间戳',
+      required_error: '缺少更新时间',
+    })
+    .int()
+    .positive()
+    .describe('更新时间戳')
+    .optional(),
 });
 
 export const paginationSchema = z.object({

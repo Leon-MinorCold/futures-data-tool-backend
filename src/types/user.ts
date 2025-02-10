@@ -1,3 +1,4 @@
+import { createZodDto } from 'nestjs-zod';
 import { dateSchema } from './common';
 import { z } from 'zod';
 // Supabase UUID 格式的正则表达式
@@ -17,7 +18,7 @@ export const userSchema = z
     username: z.string().min(2, 'Username must be at least 2 characters'),
     password: z.string().min(6, 'Password must be at least 6 characters'),
     salt: z.string(),
-    role: z.enum(['admin', 'user']),
+    role: z.enum(['admin', 'user']).default('user').optional(),
     refreshToken: z.string(),
     lastSignedIn: z.date(),
   })
@@ -43,7 +44,9 @@ export const safeUserSchema = userSchema.omit({
   lastSignedIn: true,
 });
 
-export type CreateUserDto = z.infer<typeof createUserSchema>;
-export type UpdateUserDto = z.infer<typeof updateUserSchema>;
+export class CreateUserDto extends createZodDto(createUserSchema) {}
+
+export class UpdateUserDto extends createZodDto(updateUserSchema) {}
+
 export type User = z.infer<typeof userSchema>;
 export type SafeUser = z.infer<typeof safeUserSchema>;

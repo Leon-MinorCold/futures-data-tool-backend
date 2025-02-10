@@ -1,8 +1,14 @@
-import { timestamp, customType } from 'drizzle-orm/pg-core';
+import { bigint, customType } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
 
 export const timestampsColumns = {
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  createdAt: bigint('created_at', { mode: 'number' }) // 存储秒级 UNIX 时间戳
+    .default(sql`EXTRACT(EPOCH FROM NOW())`)
+    .notNull(),
+
+  updatedAt: bigint('updated_at', { mode: 'number' }) // 自动更新
+    .default(sql`EXTRACT(EPOCH FROM NOW())`)
+    .notNull(),
 };
 
 // FixBug: 解决 drizzle-orm numeric 返回string类型 与 zod 的number类型不兼容问题

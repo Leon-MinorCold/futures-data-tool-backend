@@ -8,6 +8,8 @@ import {
   Put,
   NotFoundException,
   UseGuards,
+  forwardRef,
+  Inject,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import {
@@ -20,10 +22,15 @@ import {
 import { JwtGuard } from '../auth/guards/jwt.guard';
 import { ApiResponse } from '../lib/response';
 import { UseUser } from './decorators/user.decorator';
+import { AuthService } from '../auth/auth.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    @Inject(forwardRef(() => AuthService))
+    private readonly authService: AuthService,
+  ) {}
 
   @Get()
   @UseGuards(JwtGuard)
@@ -47,8 +54,14 @@ export class UsersController {
 
   @Post()
   @UseGuards(JwtGuard)
-  async createUser(@Body() userData: CreateUserDto) {
-    return await this.usersService.create(userData);
+  async createUser(@Body() userData: Omit<CreateUserDto, 'salt'>) {
+    const salt = await this.authService.generateSalt();
+    const data = {
+      ...userData,
+      salt,
+    };
+
+    return await this.usersService.create(data);
   }
 
   @Put(':id')
@@ -59,7 +72,7 @@ export class UsersController {
     if (!updatedUser) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
-    return updatedUser;
+    return safeUserSchema.parse(updatedUser);
   }
 
   @Delete(':id')

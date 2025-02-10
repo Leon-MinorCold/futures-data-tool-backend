@@ -15,7 +15,7 @@ export class FuturesService extends BaseService<Futures> {
     super(database, futures, 'Futures');
   }
 
-  async findAll(page = 1, pageSize = 10): Promise<Futures[]> {
+  async findAll({ page = 1, pageSize = 10 }): Promise<Futures[]> {
     const offset = (page - 1) * pageSize;
     return this.database.db
       .select()

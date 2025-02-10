@@ -30,7 +30,7 @@ export class UsersService {
   }
 
   async create(data: CreateUserDto): Promise<User> {
-    const { username, email, password, salt, role } = data;
+    const { username, email, password, role = 'user', salt } = data;
 
     const userData = {
       username,

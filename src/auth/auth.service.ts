@@ -5,6 +5,8 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  forwardRef,
+  Inject,
 } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
@@ -17,6 +19,7 @@ import { JwtPayload, RegisterDto, LoginDto } from '../types/auth';
 @Injectable()
 export class AuthService {
   constructor(
+    @Inject(forwardRef(() => UsersService))
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService<Config>,
@@ -27,7 +30,7 @@ export class AuthService {
     return bcrypt.hash(password, salt);
   }
 
-  private generateSalt(rounds: number = 10): Promise<string> {
+  public generateSalt(rounds: number = 10): Promise<string> {
     return bcrypt.genSalt(rounds);
   }
 
