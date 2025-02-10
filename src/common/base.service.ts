@@ -28,10 +28,6 @@ export class BaseService<T, UpdateDto = Partial<T>> {
     return entity as T;
   }
 
-  async findAll(): Promise<T[]> {
-    return (await this.database.db.select().from(this.table)) as T[];
-  }
-
   async update(id: string, data: UpdateDto): Promise<T> {
     await this.findOneById(id);
     const [updatedEntity] = await this.database.db

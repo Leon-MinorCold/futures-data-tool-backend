@@ -1,5 +1,5 @@
 import { createZodDto } from 'nestjs-zod/dto';
-import { dateSchema } from './common';
+import { dateSchema, paginationSchema } from './common';
 import { z } from 'zod';
 
 export const futuresSchema = z
@@ -38,6 +38,9 @@ export const createFuturesSchema = futuresSchema.pick({
 
 export const updateFuturesSchema = futuresSchema.partial();
 
+export const getAllFuturesSchema = z.object({}).merge(paginationSchema);
+
 export class Futures extends createZodDto(futuresSchema) {}
 export class CreateFuturesDto extends createZodDto(createFuturesSchema) {}
 export class UpdateFuturesDto extends createZodDto(updateFuturesSchema) {}
+export class getAllFuturesDto extends createZodDto(getAllFuturesSchema) {}

@@ -11,12 +11,6 @@ export class BaseController<T, UpdateDto> {
     return this.service.findOneById(id);
   }
 
-  @Get()
-  @UseGuards(JwtGuard)
-  async findAll(): Promise<T[]> {
-    return this.service.findAll();
-  }
-
   @Put(':id')
   @UseGuards(JwtGuard)
   async update(@Param('id') id: string, @Body() data: UpdateDto): Promise<T> {

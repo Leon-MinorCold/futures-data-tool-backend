@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
 import { CreateFuturesDto, Futures } from '../types/futures';
 import { futures } from 'src/database/schema/futures';
@@ -9,6 +13,29 @@ import { BaseService } from '../common/base.service';
 export class FuturesService extends BaseService<Futures> {
   constructor(readonly database: DatabaseService) {
     super(database, futures, 'Futures');
+  }
+
+  async findAll({ page = 1, pageSize = 10 }): Promise<Futures[]> {
+    const offset = (page - 1) * pageSize;
+    return await this.database.db
+      .select()
+      .from(futures)
+      .limit(pageSize)
+      .offset(offset);
+  }
+
+  async findOneById(id: string): Promise<Futures> {
+    const [entity] = await this.database.db
+      .select()
+      .from(futures)
+      .where(eq(futures.id, id))
+      .limit(1);
+
+    if (!entity) {
+      throw new NotFoundException(`Futures with ID ${id} not found`);
+    }
+
+    return entity;
   }
 
   async findOneByCode(code: string): Promise<Futures> {
