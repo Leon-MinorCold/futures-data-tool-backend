@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
 import { users } from '../database/schema/users';
-import { eq } from 'drizzle-orm';
+import { eq, count } from 'drizzle-orm';
 import { CreateUserDto, UpdateUserDto, User, uuidSchema } from '../types/user';
 
 @Injectable()
@@ -47,8 +47,16 @@ export class UsersService {
     return newUser;
   }
 
-  async findAll(): Promise<User[]> {
-    return await this.database.db.select().from(users);
+  async getTotalCount(): Promise<number> {
+    const result = await this.database.db
+      .select({ count: count() })
+      .from(users);
+    return Number(result[0]?.count || 0);
+  }
+
+  async findAll({ page = 1, pageSize = 10 }): Promise<User[]> {
+    const offset = (page - 1) * pageSize;
+    return this.database.db.select().from(users).limit(pageSize).offset(offset);
   }
 
   async update(id: string, userData: UpdateUserDto): Promise<User> {

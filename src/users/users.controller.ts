@@ -10,6 +10,7 @@ import {
   UseGuards,
   forwardRef,
   Inject,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import {
@@ -24,6 +25,7 @@ import { ApiResponse } from '../lib/response';
 import { UseUser } from './decorators/user.decorator';
 import { AuthService } from '../auth/auth.service';
 import { createRoleGuard } from '../auth/guards/role.guard';
+import { PaginatedResponse } from 'src/types/common';
 
 @Controller('users')
 export class UsersController {
@@ -35,10 +37,24 @@ export class UsersController {
 
   @Get()
   @UseGuards(JwtGuard)
-  async findAllUsers() {
-    return (await this.usersService.findAll()).map((item) =>
-      safeUserSchema.parse(item),
-    );
+  async findAllUsers(
+    @Query() query: { page?: string; pageSize?: string },
+  ): Promise<PaginatedResponse<SafeUser>> {
+    const page = query.page ? +query.page : 1;
+    const pageSize = query.pageSize ? +query.pageSize : 10;
+    const [list, total] = await Promise.all([
+      this.usersService.findAll({ page, pageSize }),
+      this.usersService.getTotalCount(),
+    ]);
+    const safeList = list.map((item) => safeUserSchema.parse(item));
+    return {
+      list: safeList,
+      pagination: {
+        page,
+        pageSize,
+        total,
+      },
+    };
   }
 
   @Get('me')
