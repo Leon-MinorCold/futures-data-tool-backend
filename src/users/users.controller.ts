@@ -23,6 +23,7 @@ import { JwtGuard } from '../auth/guards/jwt.guard';
 import { ApiResponse } from '../lib/response';
 import { UseUser } from './decorators/user.decorator';
 import { AuthService } from '../auth/auth.service';
+import { createRoleGuard } from '../auth/guards/role.guard';
 
 @Controller('users')
 export class UsersController {
@@ -53,15 +54,17 @@ export class UsersController {
   }
 
   @Post()
-  @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard, createRoleGuard(['admin']))
   async createUser(@Body() userData: Omit<CreateUserDto, 'salt'>) {
     const salt = await this.authService.generateSalt();
+    const hashedPassword = await this.authService.hash(userData.password, salt);
     const data = {
       ...userData,
       salt,
+      password: hashedPassword,
     };
 
-    return await this.usersService.create(data);
+    return safeUserSchema.parse(await this.usersService.create(data));
   }
 
   @Put(':id')
@@ -76,7 +79,7 @@ export class UsersController {
   }
 
   @Delete(':id')
-  @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard, createRoleGuard(['admin']))
   async deleteUser(@Param('id') id: string) {
     const deletedUser = await this.usersService.delete(id);
 

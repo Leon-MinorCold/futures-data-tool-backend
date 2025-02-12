@@ -10,7 +10,7 @@ import {
 import { AuthService } from './auth.service';
 import { Response } from 'express';
 import { jwtPayloadSchema, RegisterDto } from '../types/auth';
-import { safeUserSchema, User } from '../types/user';
+import { safeUserSchema, User, UserRole } from '../types/user';
 import { getCookieOptions } from './utils/cookie';
 import { LocalGuard } from './guards/local.guard';
 import { UseUser } from '../users/decorators/user.decorator';
@@ -21,11 +21,20 @@ import { RefreshGuard } from './guards/refresh.guard';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  private async exchangeToken(id: string, email: string) {
+  private async exchangeToken({
+    id,
+    email,
+    role,
+  }: {
+    id: string;
+    email: string;
+    role: UserRole;
+  }) {
     try {
       const payload = jwtPayloadSchema.parse({
         id,
         email,
+        role,
       });
       const accessToken = this.authService.generateToken('access', payload);
       const refreshToken = this.authService.generateToken('refresh', payload);
@@ -43,10 +52,13 @@ export class AuthController {
   }
 
   private async handleAuthorization(user: User, response: Response) {
-    const { accessToken, refreshToken } = await this.exchangeToken(
-      user.id,
-      user.email,
-    );
+    const { id, role, email } = user;
+
+    const { accessToken, refreshToken } = await this.exchangeToken({
+      id,
+      email,
+      role,
+    });
 
     response.cookie('access_token', accessToken, getCookieOptions('access'));
     response.cookie('refresh_token', refreshToken, getCookieOptions('refresh'));

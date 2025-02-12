@@ -10,6 +10,8 @@ export const uuidSchema = z.string().regex(uuidRegex, {
   message: 'Invalid UUID format',
 });
 
+export const userRoleEnum = z.enum(['admin', 'user']).default('user');
+
 // 基础用户 Schema (来自数据库表)
 export const userSchema = z
   .object({
@@ -18,7 +20,7 @@ export const userSchema = z
     username: z.string().min(2, 'Username must be at least 2 characters'),
     password: z.string().min(6, 'Password must be at least 6 characters'),
     salt: z.string(),
-    role: z.enum(['admin', 'user']).default('user').optional(),
+    role: userRoleEnum,
     refreshToken: z.string(),
     lastSignedIn: z.date(),
   })
@@ -50,3 +52,4 @@ export class UpdateUserDto extends createZodDto(updateUserSchema) {}
 
 export type User = z.infer<typeof userSchema>;
 export type SafeUser = z.infer<typeof safeUserSchema>;
+export type UserRole = z.infer<typeof userRoleEnum>;

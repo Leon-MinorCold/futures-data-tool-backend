@@ -26,7 +26,7 @@ export class AuthService {
   ) {}
 
   // generate hashed password
-  private hash(password: string, salt: string): Promise<string> {
+  public hash(password: string, salt: string): Promise<string> {
     return bcrypt.hash(password, salt);
   }
 
@@ -42,7 +42,7 @@ export class AuthService {
   private async checkPassword(password: string, hashedPassword: string) {
     const isValid = await this.compare(password, hashedPassword);
     if (!isValid) {
-      throw new BadRequestException('Invalid Credentials');
+      throw new BadRequestException('Invalid Password');
     }
   }
 

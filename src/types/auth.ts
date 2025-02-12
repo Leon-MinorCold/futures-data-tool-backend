@@ -39,6 +39,7 @@ export const loginSchema = z
 export const jwtPayloadSchema = userSchema.pick({
   id: true,
   email: true,
+  role: true,
 });
 
 export type JwtPayload = z.infer<typeof jwtPayloadSchema>;
