@@ -28,10 +28,16 @@ export class AllExceptionsFilter implements ExceptionFilter {
   ]);
 
   // 默认错误处理
-  private handleDefault = () => ({
-    status: HttpStatus.INTERNAL_SERVER_ERROR,
-    response: ApiResponse.error(ResponseCode.FAIL, 'Internal server error'),
-  });
+  private handleDefault = (exception: HttpException) => {
+    console.log('Default Error Hanlder:', { exception });
+    return {
+      status: HttpStatus.INTERNAL_SERVER_ERROR,
+      response: ApiResponse.error(
+        ResponseCode.FAIL,
+        exception.message || 'Internal server error',
+      ),
+    };
+  };
 
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
@@ -49,6 +55,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
   // Zod 验证错误处理
   private handleZodError(exception: ZodValidationException) {
+    console.log('Zod Error:', { exception });
     const message =
       exception.getZodError().errors[0]?.message || 'Validation Failed';
     return {
@@ -59,6 +66,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
   // Postgres 错误处理
   private handlePostgresError(exception: PostgresError) {
+    console.log('Postgres Error:', { exception });
     const errorMap = {
       '22P02': () => ({
         message: exception.message,
@@ -83,6 +91,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
   // 通用 HTTP 异常处理
   private handleHttpException(exception: HttpException) {
+    console.log('Http Error:', { exception });
     const status = exception.getStatus();
     const response = exception.getResponse();
 

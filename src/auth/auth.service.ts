@@ -27,6 +27,8 @@ export class AuthService {
 
   // generate hashed password
   public hash(password: string, salt: string): Promise<string> {
+    if (!password) throw new BadRequestException('Password missed');
+    if (!salt) throw new BadRequestException('Salt missed');
     return bcrypt.hash(password, salt);
   }
 

@@ -73,7 +73,8 @@ export class UsersController {
   @UseGuards(JwtGuard, createRoleGuard(['admin']))
   async createUser(@Body() userData: Omit<CreateUserDto, 'salt'>) {
     const salt = await this.authService.generateSalt();
-    const hashedPassword = await this.authService.hash(userData.password, salt);
+    const userPasswrd = userData.password || '123456';
+    const hashedPassword = await this.authService.hash(userPasswrd, salt);
     const data = {
       ...userData,
       salt,
