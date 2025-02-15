@@ -9,7 +9,9 @@ describe('FuturesTradeHistoryController', () => {
       controllers: [FuturesTradeHistoryController],
     }).compile();
 
-    controller = module.get<FuturesTradeHistoryController>(FuturesTradeHistoryController);
+    controller = module.get<FuturesTradeHistoryController>(
+      FuturesTradeHistoryController,
+    );
   });
 
   it('should be defined', () => {

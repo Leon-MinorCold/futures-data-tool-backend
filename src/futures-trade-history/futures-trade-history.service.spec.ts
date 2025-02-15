@@ -9,7 +9,9 @@ describe('FuturesTradeHistoryService', () => {
       providers: [FuturesTradeHistoryService],
     }).compile();
 
-    service = module.get<FuturesTradeHistoryService>(FuturesTradeHistoryService);
+    service = module.get<FuturesTradeHistoryService>(
+      FuturesTradeHistoryService,
+    );
   });
 
   it('should be defined', () => {

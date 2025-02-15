@@ -5,7 +5,7 @@ import {
   FuturesTradeHistory,
 } from '../types/futures-trade-history';
 import { DatabaseService } from '../database/database.service';
-import { futuresTradeHistory } from 'src/database/schema/futures-trade-history';
+import { futuresTradeHistory } from '../database/schema/futures-trade-history';
 
 @Injectable()
 export class FuturesTradeHistoryService extends BaseService<FuturesTradeHistory> {

@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
 import { CreateFuturesDto, Futures } from '../types/futures';
-import { futures } from 'src/database/schema/futures';
+import { futures } from '../database/schema/futures';
 import { eq, count } from 'drizzle-orm';
 import { BaseService } from '../common/base.service';
 
