@@ -3,7 +3,6 @@ import { db, queryClient } from './config';
 import crypto from 'crypto';
 import { users } from './schema/users';
 import { futures } from './schema/futures';
-import { futuresTradeHistory } from './schema/futures-trade-history';
 
 // 辅助函数：生成盐值和密码哈希
 function generatePassword(plainPassword: string) {
@@ -31,14 +30,13 @@ async function insertUsers() {
 async function insertFutures() {
   await db.insert(futures).values([
     {
-      contractCode: 'FG',
-      contractName: '玻璃',
+      code: 'FG',
+      name: '玻璃',
       minPriceTick: 1,
-      tickValue: 20,
-      tradeFee: 6,
+      fee: 6,
       exchange: '上海交易所',
-      contractUnitValue: 20,
-      contractUnitType: '吨/手',
+      size: 20,
+      unit: '吨',
     },
   ]);
 }

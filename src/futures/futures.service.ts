@@ -49,37 +49,27 @@ export class FuturesService extends BaseService<Futures> {
     const [futuresItem] = await this.database.db
       .select()
       .from(futures)
-      .where(eq(futures.contractCode, code))
+      .where(eq(futures.code, code))
       .limit(1);
     return futuresItem;
   }
 
   async create(data: CreateFuturesDto): Promise<Futures> {
-    const {
-      contractCode,
-      contractName,
-      minPriceTick,
-      tickValue,
-      tradeFee,
-      exchange,
-      contractUnitType,
-      contractUnitValue,
-    } = data;
-    const existingFutures = await this.findOneByCode(data.contractCode);
+    const { code, name, minPriceTick, fee, exchange, size, unit } = data;
+    const existingFutures = await this.findOneByCode(data.code);
     if (existingFutures)
       throw new ConflictException(
-        `Futures with code ${data.contractCode} already exists`,
+        `Futures with code ${data.code} already exists`,
       );
 
     const futuresData = {
-      contractCode,
-      contractName,
+      code,
+      name,
       minPriceTick,
-      tickValue,
-      tradeFee,
+      fee,
       exchange,
-      contractUnitType,
-      contractUnitValue,
+      size,
+      unit,
     };
     const [newFutures] = await this.database.db
       .insert(futures)
