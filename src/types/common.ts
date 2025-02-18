@@ -1,3 +1,4 @@
+import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 
 export const dateSchema = z.object({
@@ -35,3 +36,5 @@ export interface PaginatedResponse<T> {
     total: number;
   };
 }
+
+export class PaginationDto extends createZodDto(paginationSchema) {}

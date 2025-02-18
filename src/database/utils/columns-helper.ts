@@ -32,3 +32,36 @@ export const numericCasted = customType<{
   fromDriver: (value: string) => Number.parseFloat(value), // note: precision loss for very large/small digits so area to refactor if needed
   toDriver: (value: number) => value.toString(),
 });
+
+// 将对象的 key 从 camelCase 转换为 snake_case
+export function toSnakeCase<T>(obj: T): any {
+  if (Array.isArray(obj)) {
+    return obj.map((item) => toSnakeCase(item));
+  } else if (obj !== null && typeof obj === 'object') {
+    return Object.keys(obj).reduce((acc, key) => {
+      const newKey = key.replace(
+        /[A-Z]/g,
+        (letter) => `_${letter.toLowerCase()}`,
+      );
+      acc[newKey] = toSnakeCase(obj[key as keyof T]);
+      return acc;
+    }, {} as any);
+  }
+  return obj;
+}
+
+// 将对象的 key 从 snake_case 转换为 camelCase
+export function toCamelCase<T>(obj: T): any {
+  if (Array.isArray(obj)) {
+    return obj.map((item) => toCamelCase(item));
+  } else if (obj !== null && typeof obj === 'object') {
+    return Object.keys(obj).reduce((acc, key) => {
+      const newKey = key.replace(/_([a-z])/g, (_, letter) =>
+        letter.toUpperCase(),
+      );
+      acc[newKey] = toCamelCase(obj[key as keyof T]);
+      return acc;
+    }, {} as any);
+  }
+  return obj;
+}
