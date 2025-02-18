@@ -10,8 +10,7 @@ import { AllExceptionsFilter } from './filters/http-exception.filter';
 import { AuthModule } from './auth/auth.module';
 import { LoggerInterceptor } from './interceptors/logger.interceptor';
 import { FuturesModule } from './futures/futures.module';
-import { FuturesTradeHistoryController } from './futures-trade-history/futures-trade-history.controller';
-import { FuturesTradeHistoryModule } from './futures-trade-history/futures-trade-history.module';
+import { FuturesTransactionHistoryModule } from './futures-transaction-history/futures-transaction-history.module';
 
 @Module({
   imports: [
@@ -23,9 +22,9 @@ import { FuturesTradeHistoryModule } from './futures-trade-history/futures-trade
     UsersModule,
     AuthModule,
     FuturesModule,
-    FuturesTradeHistoryModule,
+    FuturesTransactionHistoryModule,
   ],
-  controllers: [AppController, FuturesTradeHistoryController],
+  controllers: [AppController],
   providers: [
     {
       provide: APP_PIPE,
