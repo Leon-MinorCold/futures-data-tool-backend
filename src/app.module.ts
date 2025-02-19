@@ -10,7 +10,7 @@ import { AllExceptionsFilter } from './filters/http-exception.filter';
 import { AuthModule } from './auth/auth.module';
 import { LoggerInterceptor } from './interceptors/logger.interceptor';
 import { FuturesModule } from './futures/futures.module';
-import { FuturesTransactionHistoryModule } from './futures-transaction-history/futures-transaction-history.module';
+import { FuturesTransactionModule } from './futures-transaction/futures-transaction.module';
 
 @Module({
   imports: [
@@ -22,7 +22,7 @@ import { FuturesTransactionHistoryModule } from './futures-transaction-history/f
     UsersModule,
     AuthModule,
     FuturesModule,
-    FuturesTransactionHistoryModule,
+    FuturesTransactionModule,
   ],
   controllers: [AppController],
   providers: [

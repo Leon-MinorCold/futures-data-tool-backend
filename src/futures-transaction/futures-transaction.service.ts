@@ -1,28 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import { BaseService } from '../common/base.service';
 import {
-  CreateFuturesTransactionHistoryDto,
-  FuturesTransactionHistory,
-} from '../types/futures-transaction-history';
+  CreateFuturesTransactionDto,
+  FuturesTransaction,
+} from '../types/futures-transaction';
 import { DatabaseService } from '../database/database.service';
-import { futuresTransactionHistory } from '../database/schema/futures-transaction-history';
+import { futuresTransaction } from '../database/schema/futures-transaction';
 import { PaginationDto } from '../types/common';
 import { count } from 'drizzle-orm';
 
 @Injectable()
-export class FuturesTransactionHistoryService extends BaseService<FuturesTransactionHistory> {
+export class FuturesTransactionService extends BaseService<FuturesTransaction> {
   constructor(protected readonly database: DatabaseService) {
-    super(database, futuresTransactionHistory, 'FuturesTransactionHistory');
+    super(database, futuresTransaction, 'FuturesTransaction');
   }
 
   async findAll({
     page = 1,
     pageSize = 10,
-  }: PaginationDto): Promise<FuturesTransactionHistory[]> {
+  }: PaginationDto): Promise<FuturesTransaction[]> {
     const offset = (page - 1) * pageSize;
     return this.database.db
       .select()
-      .from(futuresTransactionHistory)
+      .from(futuresTransaction)
       .limit(pageSize)
       .offset(offset);
   }
@@ -30,15 +30,13 @@ export class FuturesTransactionHistoryService extends BaseService<FuturesTransac
   async getTotalCount(): Promise<number> {
     const result = await this.database.db
       .select({ count: count() })
-      .from(futuresTransactionHistory);
+      .from(futuresTransaction);
     return Number(result[0]?.count || 0);
   }
 
-  async create(
-    data: CreateFuturesTransactionHistoryDto,
-  ): Promise<FuturesTransactionHistory> {
+  async create(data: CreateFuturesTransactionDto): Promise<FuturesTransaction> {
     const [newItem] = await this.database.db
-      .insert(futuresTransactionHistory)
+      .insert(futuresTransaction)
       .values(data)
       .returning();
 

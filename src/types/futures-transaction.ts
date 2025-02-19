@@ -149,7 +149,7 @@ export const DEFAULT_FUTURES_TRANSACTION_PROFIT: FuturesTransactionProfit = {
   current20EMA: 0,
 };
 
-export const futuresTransactionHistorySchema = z
+export const futuresTransactionSchema = z
   .object({
     id: z.string(),
     description: z.string().optional(),
@@ -165,32 +165,29 @@ export const futuresTransactionHistorySchema = z
   })
   .merge(dateSchema);
 
-export const createFuturesTransactionHistorySchema =
-  futuresTransactionHistorySchema.omit({
-    id: true,
-    createdAt: true,
-    updatedAt: true,
-  });
+export const createFuturesTransactionSchema = futuresTransactionSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
 
-export const updateFuturesTransactionHistorySchema =
-  futuresTransactionHistorySchema.partial();
+export const updateFuturesTransactionSchema =
+  futuresTransactionSchema.partial();
 
-export const getFuturesTransactionHistorySchema = z
-  .object({})
-  .merge(paginationSchema);
+export const getFuturesTransactionSchema = z.object({}).merge(paginationSchema);
 
-export class FuturesTransactionHistory extends createZodDto(
-  futuresTransactionHistorySchema,
+export class FuturesTransaction extends createZodDto(
+  futuresTransactionSchema,
 ) {}
 
-export class GetFuturesTransactionHistory extends createZodDto(
-  getFuturesTransactionHistorySchema,
+export class GetFuturesTransactionDto extends createZodDto(
+  getFuturesTransactionSchema,
 ) {}
 
-export class CreateFuturesTransactionHistoryDto extends createZodDto(
-  createFuturesTransactionHistorySchema,
+export class CreateFuturesTransactionDto extends createZodDto(
+  createFuturesTransactionSchema,
 ) {}
 
-export class UpdateFuturesTransactionHistoryDto extends createZodDto(
-  updateFuturesTransactionHistorySchema,
+export class UpdateFuturesTransactionDto extends createZodDto(
+  updateFuturesTransactionSchema,
 ) {}
