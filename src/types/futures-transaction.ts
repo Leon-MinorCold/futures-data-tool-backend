@@ -1,11 +1,26 @@
 import { createZodDto } from 'nestjs-zod/dto';
 import { dateSchema, paginationSchema } from './common';
 import { z } from 'zod';
+import { futuresSchema } from './futures';
 
 const FuturesTransactionProfitEnum = z
   .enum(['m1', 'm2', 'm3', 'sum'])
   .default('m1');
 const FuturesTransactionEntryEnum = z.enum(['long', 'long']).default('long');
+
+export const FuturesTransactionMetaSchema = futuresSchema
+  .pick({
+    name: true,
+    minPriceTick: true,
+    size: true,
+  })
+  .extend({
+    commission: z.number().nonnegative(),
+  });
+
+export type FuturesTransactionMeta = z.infer<
+  typeof FuturesTransactionMetaSchema
+>;
 
 // 基础风险控制配置
 const futuresTransactionBasisSchema = z.object({
@@ -20,16 +35,6 @@ const futuresTransactionBasisSchema = z.object({
     .default(0)
     .describe('资金比例'),
   margin: z.number().nonnegative('保证金必须大于等于0').describe('保证金'),
-  minPriceTick: z
-    .number()
-    .nonnegative('最小价格变动必须大于等于0')
-    .default(0)
-    .describe('最小价格变动，由期货数据决定'),
-  tickValue: z
-    .number()
-    .nonnegative('每跳波动价格必须大于等于0')
-    .default(0)
-    .describe('每跳波动价格，由期货数据决定'),
 });
 
 export type FuturesTransactionBasis = z.infer<
@@ -40,8 +45,6 @@ export const DEFAULT_FUTURES_TRANSACTION_BASIS: FuturesTransactionBasis = {
   totalCapital: 0,
   capitalRatio: 0,
   margin: 0,
-  minPriceTick: 0,
-  tickValue: 0,
 };
 
 // 开仓控制工具（做空or做多）
@@ -114,11 +117,6 @@ export const futuresTransactionProfitSchema = z.object({
     .nonnegative('当前价格必须大于等于0')
     .default(0)
     .describe('当前市场价格'),
-  commission: z
-    .number()
-    .nonnegative('手续费必须大于等于0')
-    .default(0)
-    .describe('手续费，由期货数据决定'),
   exitLotPrice: z
     .number()
     .nonnegative('出仓价格必须大于等于0')
@@ -143,7 +141,6 @@ export type FuturesTransactionProfit = z.infer<
 export const DEFAULT_FUTURES_TRANSACTION_PROFIT: FuturesTransactionProfit = {
   avgPrice: 0,
   marketPrice: 0,
-  commission: 0,
   exitLotPrice: 0,
   exitLotRatio: 0,
   current20EMA: 0,
@@ -152,7 +149,10 @@ export const DEFAULT_FUTURES_TRANSACTION_PROFIT: FuturesTransactionProfit = {
 export const futuresTransactionSchema = z
   .object({
     id: z.string(),
+    futuresId: z.string(),
+    futuresMeta: FuturesTransactionMetaSchema,
     description: z.string().optional(),
+
     basis: futuresTransactionBasisSchema.default(
       DEFAULT_FUTURES_TRANSACTION_BASIS,
     ),

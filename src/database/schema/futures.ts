@@ -16,7 +16,7 @@ export const futures = pgTable('futures', {
     scale: 4,
   }).notNull(),
 
-  // 每跳波动价值 = 最小变动单位 * 合约单位 ex: 玻璃每跳波动价值 = 1 * 20 = 20(元)
+  // 每跳波动价值 = 最小变动单位 * 期货单位值 ex: 玻璃每跳波动价值 = 1 * 20 = 20(元)
   // tickValue: numericCasted('tick_value', { precision: 10, scale: 4 }).notNull(),
 
   // 交易手续费 ex: 玻璃 76 (元)
@@ -28,7 +28,7 @@ export const futures = pgTable('futures', {
   // 交易所
   exchange: varchar('exchange', { length: 50 }).notNull(),
 
-  // 合约值 ex: 玻璃 20(吨/手)
+  // 期货单位值 ex: 玻璃 20(吨/手)
   size: numericCasted('size', {
     precision: 10,
     scale: 4,

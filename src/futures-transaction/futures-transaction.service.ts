@@ -35,11 +35,18 @@ export class FuturesTransactionService extends BaseService<FuturesTransaction> {
   }
 
   async create(data: CreateFuturesTransactionDto): Promise<FuturesTransaction> {
-    const [newItem] = await this.database.db
+    const { futuresMeta, futuresId, ...rest } = data;
+    const _data = {
+      futuresMeta,
+      futuresId,
+      ...rest,
+    };
+
+    const [newTransaction] = await this.database.db
       .insert(futuresTransaction)
-      .values(data)
+      .values(_data)
       .returning();
 
-    return newItem;
+    return newTransaction;
   }
 }
