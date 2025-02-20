@@ -1,6 +1,11 @@
 import { Body, Controller, Get, Post, UseGuards, Query } from '@nestjs/common';
 import { BaseController } from '../common/base.controller';
-import { CreateFuturesDto, Futures, UpdateFuturesDto } from '../types/futures';
+import {
+  CreateFuturesDto,
+  Futures,
+  UpdateFuturesDto,
+  GetFuturesDto,
+} from '../types/futures';
 import { FuturesService } from '../futures/futures.service';
 import { JwtGuard } from '../auth/guards/jwt.guard';
 import { PaginatedResponse } from '../types/common';
@@ -16,13 +21,13 @@ export class FuturesController extends BaseController<
 
   @Get()
   @UseGuards(JwtGuard)
-  async all(
+  async paginated(
     @Query() query: { page?: string; pageSize?: string },
   ): Promise<PaginatedResponse<Futures>> {
     const page = query.page ? +query.page : 1;
     const pageSize = query.pageSize ? +query.pageSize : 10;
     const [list, total] = await Promise.all([
-      this.futuresService.findAll({ page, pageSize }),
+      this.futuresService.findPaginated({ page, pageSize }),
       this.futuresService.getTotalCount(),
     ]);
     return {
@@ -32,6 +37,15 @@ export class FuturesController extends BaseController<
         pageSize,
         total,
       },
+    };
+  }
+
+  @Get('/all')
+  @UseGuards(JwtGuard)
+  async all(@Query() query: GetFuturesDto): Promise<{ list: Futures[] }> {
+    const list = await this.futuresService.findAll(query);
+    return {
+      list,
     };
   }
 

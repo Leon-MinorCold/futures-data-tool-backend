@@ -36,9 +36,14 @@ export const createFuturesSchema = futuresSchema.pick({
 
 export const updateFuturesSchema = futuresSchema.partial();
 
-export const getAllFuturesSchema = z.object({}).merge(paginationSchema);
+export const getFuturesSchema = z.object({
+  exchange: z.string().optional(),
+});
 
 export class Futures extends createZodDto(futuresSchema) {}
 export class CreateFuturesDto extends createZodDto(createFuturesSchema) {}
 export class UpdateFuturesDto extends createZodDto(updateFuturesSchema) {}
-export class getAllFuturesDto extends createZodDto(getAllFuturesSchema) {}
+export class GetFuturesDto extends createZodDto(getFuturesSchema) {}
+export class GetPaginatedFuturesDto extends createZodDto(
+  getFuturesSchema.merge(paginationSchema),
+) {}

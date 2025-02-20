@@ -4,7 +4,12 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
-import { CreateFuturesDto, Futures } from '../types/futures';
+import {
+  CreateFuturesDto,
+  Futures,
+  GetPaginatedFuturesDto,
+  GetFuturesDto,
+} from '../types/futures';
 import { futures } from '../database/schema/futures';
 import { eq, count } from 'drizzle-orm';
 import { BaseService } from '../common/base.service';
@@ -15,7 +20,20 @@ export class FuturesService extends BaseService<Futures> {
     super(database, futures, 'Futures');
   }
 
-  async findAll({ page = 1, pageSize = 10 }): Promise<Futures[]> {
+  // 全量查询
+  async findAll(filter?: GetFuturesDto): Promise<Futures[]> {
+    const query = this.database.db.select().from(futures);
+    if (filter?.exchange) {
+      query.where(eq(futures.exchange, filter.exchange));
+    }
+    return query;
+  }
+
+  //  分页查询
+  async findPaginated({
+    page,
+    pageSize,
+  }: GetPaginatedFuturesDto): Promise<Futures[]> {
     const offset = (page - 1) * pageSize;
     return this.database.db
       .select()
