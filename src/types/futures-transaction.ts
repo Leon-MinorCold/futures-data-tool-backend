@@ -81,11 +81,6 @@ export const DEFAULT_FUTURES_TRANSACTION_M: FuturesTransactionM = {
 };
 
 const futuresTransactionEntrySchema = z.object({
-  entryPrice: z
-    .number()
-    .nonnegative('开仓波动价格必须大于等于0')
-    .default(0)
-    .describe('开仓价格'),
   entryType: FuturesTransactionEntryEnum.describe(
     '交易类型：做空(short)or做多(long)',
   ),
@@ -100,7 +95,6 @@ export type FuturesTransactionEntry = z.infer<
 >;
 
 export const DEFAULT_FUTURES_TRANSACTION_ENTRY: FuturesTransactionEntry = {
-  entryPrice: 0,
   entryType: 'long',
   profitType: 'm1',
 };
