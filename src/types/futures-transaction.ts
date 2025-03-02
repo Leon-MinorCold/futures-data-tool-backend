@@ -6,7 +6,7 @@ import { futuresSchema } from './futures';
 const FuturesTransactionProfitEnum = z
   .enum(['m1', 'm2', 'm3', 'sum'])
   .default('m1');
-const FuturesTransactionEntryEnum = z.enum(['long', 'long']).default('long');
+const FuturesTransactionEntryEnum = z.enum(['long', 'short']).default('long');
 
 export const FuturesTransactionMetaSchema = futuresSchema
   .pick({
