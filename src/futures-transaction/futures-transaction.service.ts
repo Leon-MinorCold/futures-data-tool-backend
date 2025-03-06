@@ -3,11 +3,12 @@ import { BaseService } from '../common/base.service';
 import {
   CreateFuturesTransactionDto,
   FuturesTransaction,
+  GetAllFuturesTransactionDto,
+  GetPaginatedFuturesTransactionDto,
 } from '../types/futures-transaction';
 import { DatabaseService } from '../database/database.service';
 import { futuresTransaction } from '../database/schema/futures-transaction';
-import { PaginationDto } from '../types/common';
-import { count } from 'drizzle-orm';
+import { count, ilike } from 'drizzle-orm';
 
 @Injectable()
 export class FuturesTransactionService extends BaseService<FuturesTransaction> {
@@ -15,16 +16,27 @@ export class FuturesTransactionService extends BaseService<FuturesTransaction> {
     super(database, futuresTransaction, 'FuturesTransaction');
   }
 
-  async findAll({
+  async findAll({ keyword }: GetAllFuturesTransactionDto): Promise<any[]> {
+    const query = this.database.db.select().from(futuresTransaction);
+    if (keyword) {
+      query.where(ilike(futuresTransaction.description, `%${keyword}%`));
+    }
+
+    const result = await this.database.db.select().from(futuresTransaction);
+    return result;
+  }
+
+  async findByFilter({
     page = 1,
     pageSize = 10,
-  }: PaginationDto): Promise<FuturesTransaction[]> {
+    keyword,
+  }: GetPaginatedFuturesTransactionDto): Promise<FuturesTransaction[]> {
     const offset = (page - 1) * pageSize;
-    return this.database.db
-      .select()
-      .from(futuresTransaction)
-      .limit(pageSize)
-      .offset(offset);
+    const query = this.database.db.select().from(futuresTransaction);
+    if (keyword) {
+      query.where(ilike(futuresTransaction.description, `%${keyword}%`));
+    }
+    return query.limit(pageSize).offset(offset);
   }
 
   async getTotalCount(): Promise<number> {

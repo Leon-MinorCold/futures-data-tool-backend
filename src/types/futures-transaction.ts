@@ -49,11 +49,7 @@ export const DEFAULT_FUTURES_TRANSACTION_BASIS: FuturesTransactionBasis = {
 
 // 开仓控制工具（做空or做多）
 const futuresTransactionMSchema = z.object({
-  entrySwing: z
-    .number()
-    .nonnegative('开仓波动价格必须大于等于0')
-    .default(0)
-    .describe('开仓波动价格'),
+  entrySwing: z.number().default(0).describe('开仓波动价格'),
   positionRatio: z
     .number()
     .nonnegative('仓位百分比必须大于等于0')
@@ -170,14 +166,20 @@ export const createFuturesTransactionSchema = futuresTransactionSchema.omit({
 export const updateFuturesTransactionSchema =
   futuresTransactionSchema.partial();
 
-export const getFuturesTransactionSchema = z.object({}).merge(paginationSchema);
+export const getAllFuturesTransactionSchema = z.object({
+  keyword: z.string().optional(),
+});
 
 export class FuturesTransaction extends createZodDto(
   futuresTransactionSchema,
 ) {}
 
-export class GetFuturesTransactionDto extends createZodDto(
-  getFuturesTransactionSchema,
+export class GetAllFuturesTransactionDto extends createZodDto(
+  getAllFuturesTransactionSchema,
+) {}
+
+export class GetPaginatedFuturesTransactionDto extends createZodDto(
+  getAllFuturesTransactionSchema.merge(paginationSchema),
 ) {}
 
 export class CreateFuturesTransactionDto extends createZodDto(

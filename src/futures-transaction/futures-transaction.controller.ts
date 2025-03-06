@@ -3,6 +3,7 @@ import { BaseController } from '../common/base.controller';
 import {
   CreateFuturesTransactionDto,
   FuturesTransaction,
+  GetAllFuturesTransactionDto,
   UpdateFuturesTransactionDto,
 } from '../types/futures-transaction';
 import { FuturesTransactionService } from './futures-transaction.service';
@@ -22,13 +23,13 @@ export class FuturesTransactionController extends BaseController<
 
   @Get()
   @UseGuards(JwtGuard)
-  async all(
+  async paginated(
     @Query() query: { page?: string; pageSize?: string },
   ): Promise<PaginatedResponse<FuturesTransaction>> {
     const page = query.page ? +query.page : 1;
     const pageSize = query.pageSize ? +query.pageSize : 10;
     const [list, total] = await Promise.all([
-      this.futuresTransactionService.findAll({ page, pageSize }),
+      this.futuresTransactionService.findByFilter({ page, pageSize }),
       this.futuresTransactionService.getTotalCount(),
     ]);
     return {
@@ -39,6 +40,13 @@ export class FuturesTransactionController extends BaseController<
         total,
       },
     };
+  }
+
+  @Get('/all')
+  @UseGuards(JwtGuard)
+  async all(@Query() query: GetAllFuturesTransactionDto): Promise<any> {
+    const res = await this.futuresTransactionService.findAll(query);
+    return res;
   }
 
   @Post()
