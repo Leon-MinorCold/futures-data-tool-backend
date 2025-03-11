@@ -8,7 +8,7 @@ import {
 } from '../types/futures-transaction';
 import { DatabaseService } from '../database/database.service';
 import { futuresTransaction } from '../database/schema/futures-transaction';
-import { count, ilike } from 'drizzle-orm';
+import { count, ilike, desc } from 'drizzle-orm';
 
 @Injectable()
 export class FuturesTransactionService extends BaseService<FuturesTransaction> {
@@ -32,7 +32,10 @@ export class FuturesTransactionService extends BaseService<FuturesTransaction> {
     keyword,
   }: GetPaginatedFuturesTransactionDto): Promise<FuturesTransaction[]> {
     const offset = (page - 1) * pageSize;
-    const query = this.database.db.select().from(futuresTransaction);
+    const query = this.database.db
+      .select()
+      .from(futuresTransaction)
+      .orderBy(desc(futuresTransaction.updatedAt));
     if (keyword) {
       query.where(ilike(futuresTransaction.description, `%${keyword}%`));
     }

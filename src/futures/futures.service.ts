@@ -11,7 +11,7 @@ import {
   GetFuturesDto,
 } from '../types/futures';
 import { futures } from '../database/schema/futures';
-import { eq, count } from 'drizzle-orm';
+import { eq, count, desc } from 'drizzle-orm';
 import { BaseService } from '../common/base.service';
 
 @Injectable()
@@ -22,7 +22,10 @@ export class FuturesService extends BaseService<Futures> {
 
   // 全量查询
   async findAll(filter?: GetFuturesDto): Promise<Futures[]> {
-    const query = this.database.db.select().from(futures);
+    const query = this.database.db
+      .select()
+      .from(futures)
+      .orderBy(desc(futures.updatedAt));
     if (filter?.exchange) {
       query.where(eq(futures.exchange, filter.exchange));
     }
@@ -38,6 +41,7 @@ export class FuturesService extends BaseService<Futures> {
     return this.database.db
       .select()
       .from(futures)
+      .orderBy(desc(futures.updatedAt))
       .limit(pageSize)
       .offset(offset);
   }
